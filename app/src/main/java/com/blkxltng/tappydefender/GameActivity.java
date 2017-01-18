@@ -1,7 +1,9 @@
 package com.blkxltng.tappydefender;
 
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Display;
 import android.view.View;
 
 public class GameActivity extends AppCompatActivity {
@@ -11,7 +13,14 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        gameView = new TDView(this);
+
+        //Get a display object to access screen details
+        Display mDisplay = getWindowManager().getDefaultDisplay();
+        //Load the resolution into a point object
+        Point size = new Point();
+        mDisplay.getSize(size);
+
+        gameView = new TDView(this, size.x, size.y);
         setContentView(gameView);
 
         View decorView = getWindow().getDecorView();
