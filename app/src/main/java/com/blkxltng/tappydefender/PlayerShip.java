@@ -3,6 +3,7 @@ package com.blkxltng.tappydefender;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 
 /**
  * Created by firej on 1/18/2017.
@@ -24,6 +25,19 @@ public class PlayerShip {
     private final int MIN_SPEED = 1;
     private final int MAX_SPEED = 20;
 
+    //Hitbox for collision
+    private Rect hitBox;
+
+    private int shieldStrength;
+
+    public Rect getHitBox() {
+        return hitBox;
+    }
+
+    public int getShieldStrength() {
+        return shieldStrength;
+    }
+
     public PlayerShip(Context context, int screenX, int screenY) {
         x = 50;
         y = 50;
@@ -31,6 +45,12 @@ public class PlayerShip {
         mBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ship);
         maxY = screenY - mBitmap.getHeight();
         minY = 0;
+
+        //Initialize the hitbox
+        hitBox = new Rect(x, y, mBitmap.getWidth(), mBitmap.getHeight());
+
+        shieldStrength = 2;
+
     }
 
     public void update() {
@@ -64,6 +84,12 @@ public class PlayerShip {
         if(y > maxY) {
             y = maxY;
         }
+
+        //Refresh the hitbox
+        hitBox.left = x;
+        hitBox.top = y;
+        hitBox.right = x + mBitmap.getWidth();
+        hitBox.bottom = y + mBitmap.getHeight();
     }
 
     public Bitmap getBitmap() {
@@ -88,5 +114,9 @@ public class PlayerShip {
 
     public void stopBoosting() {
         boosting = false;
+    }
+
+    public void reduceShieldStrength() {
+        shieldStrength--;
     }
 }

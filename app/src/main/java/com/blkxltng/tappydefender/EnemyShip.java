@@ -3,6 +3,7 @@ package com.blkxltng.tappydefender;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 
 import java.util.Random;
 
@@ -23,6 +24,13 @@ public class EnemyShip {
     //spawn enemies within bounds of screen
     private int maxY;
     private int minY;
+
+    //Hitbox for collision
+    private Rect hitBox;
+
+    public Rect getHitBox() {
+        return hitBox;
+    }
 
     //Getters
     public Bitmap getBitmap() {
@@ -51,6 +59,14 @@ public class EnemyShip {
 
         x = screenX;
         y = generator.nextInt(maxY) - getBitmap().getHeight();
+
+        //Initialize the hitbox
+        hitBox = new Rect(x, y, mBitmap.getWidth(), mBitmap.getHeight());
+    }
+
+    //Used by the TDView update() method to make an enemy out of bounds and force respawn
+    public void setX(int x) {
+        this.x = x;
     }
 
     public void update(int playerSpeed) {
@@ -63,8 +79,15 @@ public class EnemyShip {
         if(x < minX-mBitmap.getWidth()) {
             Random generator = new Random();
             speed = generator.nextInt(10) + 10;
+
             x = maxX;
             y = generator.nextInt(maxY) - mBitmap.getHeight();
         }
+
+        //Refresh the hitbox
+        hitBox.left = x;
+        hitBox.top = y;
+        hitBox.right = x + mBitmap.getWidth();
+        hitBox.bottom = y + mBitmap.getHeight();
     }
 }
