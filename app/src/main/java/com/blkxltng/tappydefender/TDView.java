@@ -1,6 +1,7 @@
 package com.blkxltng.tappydefender;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
 import android.graphics.Canvas;
@@ -63,6 +64,9 @@ public class TDView extends SurfaceView implements Runnable {
     int sndDestroyed = -1;
     int sndWin = -1;
 
+    //For saving data ie. scores
+    private SharedPreferences mPreferences;
+    private SharedPreferences.Editor mEditor;
 
     public TDView(Context context, int x, int y) {
         super(context);
@@ -111,6 +115,13 @@ public class TDView extends SurfaceView implements Runnable {
 //            SpaceDust speck = new SpaceDust(x,y);
 //            dustList.add(speck);
 //        }
+
+        //Get a reference to a file called HighScores. It is created if the id doesn't exist
+        mPreferences = mContext.getSharedPreferences("HighScores", mContext.MODE_PRIVATE);
+        //Initialize the editor
+        mEditor = mPreferences.edit();
+        //Load the fastest time from a entry in the file labled "fastestTime" if none then score is 10000000
+        fastestTime = mPreferences.getLong("fastestTime", 1000000);
 
         startGame();
     }
@@ -181,6 +192,9 @@ public class TDView extends SurfaceView implements Runnable {
             mSoundPool.play(sndWin, 1, 1, 0, 0, 1);
             //Check for a fastest time
             if(timeTaken < fastestTime) {
+                //Save the score
+                mEditor.putLong("fastestTime", timeTaken);
+                mEditor.commit();
                 fastestTime = timeTaken;
             }
 

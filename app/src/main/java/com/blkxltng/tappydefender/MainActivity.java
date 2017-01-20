@@ -1,10 +1,12 @@
 package com.blkxltng.tappydefender;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -12,6 +14,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //Get ready to load fastest time
+        SharedPreferences mPreferences;
+        SharedPreferences.Editor mEditor;
+        mPreferences = getSharedPreferences("HighScores", MODE_PRIVATE);
 
         View decorView = getWindow().getDecorView();
         // Hide the status bar.
@@ -24,6 +31,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         final Button buttonPlay = (Button) findViewById(R.id.buttonPlay);
         buttonPlay.setOnClickListener(this);
+
+        final TextView textFastestTime = (TextView) findViewById(R.id.textHighScore);
+        long fastestTime = mPreferences.getLong("fastestTime", 10000000);
+        textFastestTime.setText("Fastest Time: " + fastestTime);
     }
 
     @Override
