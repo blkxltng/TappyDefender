@@ -43,6 +43,7 @@ public class PlayerShip {
         y = 50;
         speed = 1;
         mBitmap = BitmapFactory.decodeResource(context.getResources(), R.drawable.ship);
+        scaleBitmap(screenX);
         maxY = screenY - mBitmap.getHeight();
         minY = 0;
 
@@ -118,5 +119,14 @@ public class PlayerShip {
 
     public void reduceShieldStrength() {
         shieldStrength--;
+    }
+
+    public void scaleBitmap(int x) {
+
+        if(x < 1000) {
+            mBitmap = Bitmap.createScaledBitmap(mBitmap, mBitmap.getWidth()/3, mBitmap.getHeight()/3, false);
+        } else if(x < 1200) {
+            mBitmap = Bitmap.createScaledBitmap(mBitmap, mBitmap.getWidth()/2, mBitmap.getHeight()/2, false);
+        }
     }
 }

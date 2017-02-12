@@ -33,7 +33,7 @@ public class TDView extends SurfaceView implements Runnable {
 
     //Game objects
     private PlayerShip mPlayer;
-    public EnemyShip mEnemyShip1, mEnemyShip2, mEnemyShip3;
+    public EnemyShip mEnemyShip1, mEnemyShip2, mEnemyShip3, mEnemyShip4, mEnemyShip5;
 
     //Make some dust
     public ArrayList<SpaceDust> dustList = new ArrayList<SpaceDust>();
@@ -155,6 +155,20 @@ public class TDView extends SurfaceView implements Runnable {
             mEnemyShip3.setX(-100);
         }
 
+        if(screenX > 1000) {
+            if(Rect.intersects(mPlayer.getHitBox(), mEnemyShip4.getHitBox())) {
+                hitDetected = true;
+                mEnemyShip4.setX(-100);
+            }
+        }
+
+        if(screenX > 1200) {
+            if(Rect.intersects(mPlayer.getHitBox(), mEnemyShip5.getHitBox())) {
+                hitDetected = true;
+                mEnemyShip5.setX(-100);
+            }
+        }
+
         if(hitDetected) {
             mSoundPool.play(sndBump, 1, 1, 0, 0, 1);
             mPlayer.reduceShieldStrength();
@@ -172,6 +186,13 @@ public class TDView extends SurfaceView implements Runnable {
         mEnemyShip1.update(mPlayer.getSpeed());
         mEnemyShip2.update(mPlayer.getSpeed());
         mEnemyShip3.update(mPlayer.getSpeed());
+
+        if(screenX > 1000) {
+            mEnemyShip4.update(mPlayer.getSpeed());
+        }
+        if(screenX > 1200) {
+            mEnemyShip5.update(mPlayer.getSpeed());
+        }
 
         //For the dust
         for(SpaceDust spaceDust : dustList) {
@@ -245,13 +266,22 @@ public class TDView extends SurfaceView implements Runnable {
             mCanvas.drawBitmap(mEnemyShip2.getBitmap(), mEnemyShip2.getX(), mEnemyShip2.getY(), mPaint);
             mCanvas.drawBitmap(mEnemyShip3.getBitmap(), mEnemyShip3.getX(), mEnemyShip3.getY(), mPaint);
 
+            if (screenX > 1000) {
+                mCanvas.drawBitmap(mEnemyShip4.getBitmap(), mEnemyShip4.getX(), mEnemyShip4.getY(), mPaint);
+            }
+            if (screenX > 1200) {
+                mCanvas.drawBitmap(mEnemyShip5.getBitmap(), mEnemyShip5.getX(), mEnemyShip5.getY(), mPaint);
+            }
+
             if(!gameEnded) {
                 //Draw the HUD
                 mPaint.setTextAlign(Paint.Align.LEFT);
                 mPaint.setColor(Color.argb(255, 255, 255, 255));
                 mPaint.setTextSize(25);
-                mCanvas.drawText("Fastest: " + fastestTime + "s", 10, 20, mPaint);
-                mCanvas.drawText("Time: " + timeTaken + "s", screenX/2, 20, mPaint);
+                //mCanvas.drawText("Fastest: " + fastestTime + "s", 10, 20, mPaint);
+                mCanvas.drawText("Fastest: " + formatTime(fastestTime) + "s", 10, 20, mPaint);
+                //mCanvas.drawText("Time: " + timeTaken + "s", screenX/2, 20, mPaint);
+                mCanvas.drawText("Time: " + formatTime(timeTaken) + "s", screenX/2, 20, mPaint);
                 mCanvas.drawText("Distance: " + distanceRemaining / 1000 + " KM", screenX/3, screenY - 20, mPaint);
                 mCanvas.drawText("Shield: " + mPlayer.getShieldStrength(), 10, screenY-20, mPaint);
                 mCanvas.drawText("Speed: " + mPlayer.getSpeed() * 60 + " MPS", (screenX/3)*2, screenY-20, mPaint);
@@ -262,8 +292,10 @@ public class TDView extends SurfaceView implements Runnable {
                 mPaint.setTextAlign(Paint.Align.CENTER);
                 mCanvas.drawText("Game Over", screenX/2, 100, mPaint);
                 mPaint.setTextSize(25);
-                mCanvas.drawText("Fastest: " + fastestTime + "s", screenX/2, 160, mPaint);
-                mCanvas.drawText("Time: " + timeTaken + "s", screenX/2, 200, mPaint);
+                //mCanvas.drawText("Fastest: " + fastestTime + "s", screenX/2, 160, mPaint);
+                mCanvas.drawText("Fastest: " + formatTime(fastestTime) + "s", screenX/2, 160, mPaint);
+                //mCanvas.drawText("Time: " + timeTaken + "s", screenX/2, 200, mPaint);
+                mCanvas.drawText("Time: " + formatTime(fastestTime) + "s", screenX/2, 200, mPaint);
                 mCanvas.drawText("Distance Remaining: " + distanceRemaining + "KM", screenX/2, 240, mPaint);
                 mPaint.setTextSize(80);
                 mCanvas.drawText("Tap to Replay!", screenX/2, 350, mPaint);
@@ -326,6 +358,13 @@ public class TDView extends SurfaceView implements Runnable {
         mEnemyShip2 = new EnemyShip(mContext, screenX, screenY);
         mEnemyShip3 = new EnemyShip(mContext, screenX, screenY);
 
+        if(screenX > 1000) {
+            mEnemyShip4 = new EnemyShip(mContext, screenX, screenY);
+        }
+        if(screenX > 1200) {
+            mEnemyShip5 = new EnemyShip(mContext, screenX, screenY);
+        }
+
         int numDust = 40;
         for(int i = 0; i < numDust; i++) {
             //Where to spawn?
@@ -343,6 +382,20 @@ public class TDView extends SurfaceView implements Runnable {
         gameEnded = false;
 
         mSoundPool.play(sndStart, 1, 1, 0, 0, 1);
+    }
+
+    private String formatTime(long time) {
+        long seconds = (time) / 1000;
+        long thousandths = (time) - (seconds * 1000);
+        String strthousanths = "" + thousandths;
+        if(thousandths < 100) {
+            strthousanths = "0" + thousandths;
+        }
+        if(thousandths < 10) {
+            strthousanths = "0" + strthousanths;
+        }
+        String stringTime = "" + seconds + "." + strthousanths;
+        return stringTime;
     }
 
 }
