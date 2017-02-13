@@ -28,23 +28,6 @@ public class EnemyShip {
     //Hitbox for collision
     private Rect hitBox;
 
-    public Rect getHitBox() {
-        return hitBox;
-    }
-
-    //Getters
-    public Bitmap getBitmap() {
-        return mBitmap;
-    }
-
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
     //Constructor
     public EnemyShip(Context context, int screenX, int screenY) {
 
@@ -75,7 +58,7 @@ public class EnemyShip {
 
         speed = generator.nextInt(6) + 10;
         x = screenX;
-        y = generator.nextInt(maxY) - getBitmap().getHeight();
+        y = generator.nextInt(maxY) - mBitmap.getHeight();
 
         //Initialize the hitbox
         hitBox = new Rect(x, y, mBitmap.getWidth(), mBitmap.getHeight());
@@ -93,7 +76,7 @@ public class EnemyShip {
         x -= speed;
 
         //respawn when off screen
-        if(x < minX-mBitmap.getWidth()) {
+        if(x < (minX - mBitmap.getWidth())) {
             Random generator = new Random();
             speed = generator.nextInt(10) + 10;
 
@@ -115,5 +98,22 @@ public class EnemyShip {
         } else if(x < 1200) {
             mBitmap = Bitmap.createScaledBitmap(mBitmap, mBitmap.getWidth()/2, mBitmap.getHeight()/2, false);
         }
+    }
+
+    //Getters
+    public Rect getHitBox() {
+        return hitBox;
+    }
+
+    public Bitmap getBitmap() {
+        return mBitmap;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }

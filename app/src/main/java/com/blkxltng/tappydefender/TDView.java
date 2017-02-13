@@ -18,9 +18,6 @@ import android.view.SurfaceView;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import static android.R.attr.x;
-import static android.R.attr.y;
-
 /**
  * Created by firej on 1/18/2017.
  */
@@ -67,6 +64,8 @@ public class TDView extends SurfaceView implements Runnable {
     //For saving data ie. scores
     private SharedPreferences mPreferences;
     private SharedPreferences.Editor mEditor;
+
+    private int respawnNum = -1000;
 
     public TDView(Context context, int x, int y) {
         super(context);
@@ -144,28 +143,28 @@ public class TDView extends SurfaceView implements Runnable {
         //If you use images in excess of 100 pixels wide, increase the -100 value accordingly
         if(Rect.intersects(mPlayer.getHitBox(), mEnemyShip1.getHitBox())) {
             hitDetected = true;
-            mEnemyShip1.setX(-100);
+            mEnemyShip1.setX(respawnNum);
         }
         if(Rect.intersects(mPlayer.getHitBox(), mEnemyShip2.getHitBox())) {
             hitDetected = true;
-            mEnemyShip2.setX(-100);
+            mEnemyShip2.setX(respawnNum);
         }
         if(Rect.intersects(mPlayer.getHitBox(), mEnemyShip3.getHitBox())) {
             hitDetected = true;
-            mEnemyShip3.setX(-100);
+            mEnemyShip3.setX(respawnNum);
         }
 
         if(screenX > 1000) {
             if(Rect.intersects(mPlayer.getHitBox(), mEnemyShip4.getHitBox())) {
                 hitDetected = true;
-                mEnemyShip4.setX(-100);
+                mEnemyShip4.setX(respawnNum);
             }
         }
 
         if(screenX > 1200) {
             if(Rect.intersects(mPlayer.getHitBox(), mEnemyShip5.getHitBox())) {
                 hitDetected = true;
-                mEnemyShip5.setX(-100);
+                mEnemyShip5.setX(-1000);
             }
         }
 
@@ -365,10 +364,10 @@ public class TDView extends SurfaceView implements Runnable {
             mEnemyShip5 = new EnemyShip(mContext, screenX, screenY);
         }
 
-        int numDust = 40;
+        int numDust = 400;
         for(int i = 0; i < numDust; i++) {
             //Where to spawn?
-            SpaceDust speck = new SpaceDust(x,y);
+            SpaceDust speck = new SpaceDust(screenX,screenY);
             dustList.add(speck);
         }
 
